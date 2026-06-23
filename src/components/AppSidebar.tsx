@@ -4,6 +4,8 @@ import {
   Boxes, Plug, Wand2, Workflow, ScrollText, Telescope, Radar, AlertOctagon,
   CalendarRange, ShieldAlert, Fish,
 } from "lucide-react";
+import { useSession } from "@/lib/session";
+import { PATH_TO_MODULE, canAccess } from "@/lib/permissions";
 
 const nav = [
   { section: "Command", items: [
@@ -35,6 +37,16 @@ const nav = [
 
 export default function AppSidebar() {
   const { pathname } = useLocation();
+  const { user } = useSession();
+  const filteredNav = nav
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((it) => {
+        const mod = PATH_TO_MODULE[it.to];
+        return !mod || canAccess(user?.role, mod);
+      }),
+    }))
+    .filter((g) => g.items.length > 0);
   return (
     <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/80 backdrop-blur-xl">
       <div className="h-16 flex items-center gap-2.5 px-5 border-b border-sidebar-border">
@@ -47,7 +59,7 @@ export default function AppSidebar() {
         </div>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-        {nav.map((g) => (
+        {filteredNav.map((g) => (
           <div key={g.section}>
             <div className="px-2 mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground/80">
               {g.section}
