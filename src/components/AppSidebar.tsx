@@ -4,6 +4,8 @@ import {
   Boxes, Plug, Wand2, Workflow, ScrollText, Telescope, Radar, AlertOctagon,
   CalendarRange, ShieldAlert, Fish,
 } from "lucide-react";
+import { useSession } from "@/lib/session";
+import { PATH_TO_MODULE, canAccess } from "@/lib/permissions";
 
 const nav = [
   { section: "Command", items: [
