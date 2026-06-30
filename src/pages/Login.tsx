@@ -16,7 +16,6 @@ export default function Login() {
 
   return (
     <div className="min-h-full grid lg:grid-cols-2">
-      {/* Left brand panel */}
       <div className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden border-r border-border bg-gradient-surface">
         <div className="absolute inset-0 grid-bg opacity-60" />
         <div className="absolute inset-0 bg-gradient-glow" />
@@ -44,15 +43,15 @@ export default function Login() {
 
           <div className="mt-8 grid gap-3">
             {[
-              { icon: Activity, k: "1.24M signals/min", v: "Ingested across ERP · CRM · WFM · Cyber" },
-              { icon: Layers,   k: "OUPDEL pipeline",   v: "Observe → Understand → Predict → Decide → Execute → Learn" },
+              { icon: Activity, k: "1.24M signals/min", v: "Demonstration telemetry across ERP · CRM · WFM · Cyber" },
+              { icon: Layers, k: "OUPDEL pipeline", v: "Observe → Understand → Predict → Decide → Execute → Learn" },
               { icon: ShieldCheck, k: "Trust-scored decisions", v: "Multi-agent deliberation with human approval rails" },
-            ].map((f) => (
-              <div key={f.k} className="flex items-start gap-3 p-3 rounded-lg border border-border bg-card/50">
-                <f.icon className="h-4 w-4 text-primary mt-0.5" />
+            ].map((feature) => (
+              <div key={feature.k} className="flex items-start gap-3 p-3 rounded-lg border border-border bg-card/50">
+                <feature.icon className="h-4 w-4 text-primary mt-0.5" />
                 <div>
-                  <div className="text-sm font-medium">{f.k}</div>
-                  <div className="text-xs text-muted-foreground">{f.v}</div>
+                  <div className="text-sm font-medium">{feature.k}</div>
+                  <div className="text-xs text-muted-foreground">{feature.v}</div>
                 </div>
               </div>
             ))}
@@ -60,11 +59,10 @@ export default function Login() {
         </div>
 
         <div className="relative text-xs text-muted-foreground font-mono">
-          SOC 2 · ISO 27001 · GDPR · HIPAA · EU AI Act ready — pre-production demonstration build
+          Pre-production demonstration · Security and compliance controls shown are design targets, not certifications.
         </div>
       </div>
 
-      {/* Right login */}
       <div className="flex items-center justify-center p-6 md:p-12">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8">
@@ -74,37 +72,42 @@ export default function Login() {
             <div className="font-display text-lg font-bold">HALIBUT <span className="text-primary">OS</span></div>
           </div>
 
-          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-primary mb-2">Secure Sign-in · SSO Federated</div>
-          <h2 className="font-display text-2xl font-bold mb-1">Welcome back, operator.</h2>
-          <p className="text-sm text-muted-foreground mb-8">Select your role to enter the command surface.</p>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-primary mb-2">Controlled demonstration access</div>
+          <h2 className="font-display text-2xl font-bold mb-1">Welcome, operator.</h2>
+          <p className="text-sm text-muted-foreground mb-8">Enter a demonstration identity and select the role view you need.</p>
 
           <form
-            onSubmit={(e) => { e.preventDefault(); signIn(name, role); nav("/app"); }}
+            onSubmit={(event) => {
+              event.preventDefault();
+              signIn(name, email, role);
+              nav("/app");
+            }}
             className="space-y-4"
           >
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Full name</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} required />
+              <Label htmlFor="demo-name" className="text-xs uppercase tracking-wider text-muted-foreground">Full name</Label>
+              <Input id="demo-name" value={name} onChange={(event) => setName(event.target.value)} maxLength={80} required />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Corporate email</Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Label htmlFor="demo-email" className="text-xs uppercase tracking-wider text-muted-foreground">Demonstration email</Label>
+              <Input id="demo-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} maxLength={254} required />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Role</Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Role view</Label>
               <div className="grid grid-cols-2 gap-2">
-                {ROLES.map((r) => (
+                {ROLES.map((candidateRole) => (
                   <button
                     type="button"
-                    key={r}
-                    onClick={() => setRole(r)}
+                    key={candidateRole}
+                    onClick={() => setRole(candidateRole)}
+                    aria-pressed={role === candidateRole}
                     className={`px-3 py-2 rounded-md text-sm border text-left transition-all ${
-                      role === r
+                      role === candidateRole
                         ? "border-primary bg-primary/10 text-foreground shadow-[0_0_0_1px_hsl(var(--primary)/0.4)]"
                         : "border-border bg-muted/40 text-muted-foreground hover:text-foreground hover:border-border"
                     }`}
                   >
-                    {r}
+                    {candidateRole}
                   </button>
                 ))}
               </div>
@@ -115,7 +118,7 @@ export default function Login() {
             </Button>
 
             <p className="text-[11px] text-muted-foreground text-center pt-2">
-              Demonstration environment. No real credentials are validated. Roles gate the experience.
+              No password or real credential is collected. Access controls in this build are client-side demonstration gates.
             </p>
           </form>
         </div>
